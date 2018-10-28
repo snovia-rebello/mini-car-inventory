@@ -1,26 +1,18 @@
 <?php
 class Database{
 	
-	private $server, $username, $password,$database;
+	private $conn;
 	function __construct()
 	{
-		$this->server = 'localhost';
-		$this->username = 'root';
-		$this->password = '';
-		$this->database = 'car_inventory';
-	}
-	
-	public function connect() // function to connect and select db
-	{
-		mysql_connect($this->server,$this->username,$this->password) or die('DB Connection Failed!'.mysql_error());
-		mysql_select_db($this->database) or die('DB Selection Failed!'.mysql_error());
+		$this->conn = mysqli_connect('localhost','root','') or die('DB Connection Failed!');
+		mysqli_select_db($this->conn,'car_inventory') or die('DB Selection Failed!'.mysqli_error($this->conn));
 	}
 	
 	public function single_insert($table_nm, $db_arr) // function to perform insert operation
 	{
-		mysql_query("INSERT INTO ".$table_nm."(".implode(",",array_keys($db_arr)).") VALUES('".implode("','",array_values($db_arr))."')") or die('Insert Failed -- '.mysql_error());
+		mysqli_query($this->conn,"INSERT INTO ".$table_nm."(".implode(",",array_keys($db_arr)).") VALUES('".implode("','",array_values($db_arr))."')") or die('Insert Failed -- '.mysqli_error($this->conn));
 		
-		return mysql_insert_id();
+		return mysqli_insert_id($this->conn);
 	}
 	
 	public function select($table_nm, $where_cond = null, $select_params = null)// function to perform select operation
@@ -31,13 +23,13 @@ class Database{
 		if($select_params == null)
 			$select_params = '*';
 		
-		$result = mysql_query("SELECT ".$select_params." FROM ".$table_nm.$where_cond) or die("Select Failed -- ".mysql_error());
+		$result = mysqli_query($this->conn,"SELECT ".$select_params." FROM ".$table_nm.$where_cond) or die("Select Failed -- ".mysqli_error($this->conn));
 		return $result;
 	}
 	
 	public function query($query)// function to run a query
 	{
-		$query_result = mysql_query($query) or die('Query Failed -- '.mysql_error());
+		$query_result = mysqli_query($this->conn,$query) or die('Query Failed -- '.mysqli_error($this->conn));
 		
 		return $query_result;
 	}
@@ -45,7 +37,7 @@ class Database{
 	public function fetchResultSet($query_result)// function to pass the result set of the query that was run
 	{
 		$result_set = array();
-		while($row = mysql_fetch_assoc($query_result))
+		while($row = mysqli_fetch_assoc($query_result))
 		{
 			array_push($result_set,$row);
 		}
@@ -54,7 +46,12 @@ class Database{
 	
 	public function num_rows($query_result)// function to return num rows of an executed query
 	{
-		return mysql_num_rows($query_result);
+		return mysqli_num_rows($query_result);
+	}
+	
+	public function get_mysql_real_escape_string($str)
+	{
+		return mysqli_real_escape_string($this->conn,$str);
 	}
 }
 ?>

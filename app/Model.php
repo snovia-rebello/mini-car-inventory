@@ -71,7 +71,7 @@ class Model extends Manufacturer{
 				{
 					$insert_arr = array(
 						"manufacturers_manufacturer_id" => $manufacturer,
-						"model_name" => mysql_real_escape_string($model_name),
+						"model_name" => $this->db->get_mysql_real_escape_string($model_name),
 						"added_datetime" => date("Y-m-d H:i:s")
 					);
 					
@@ -122,10 +122,10 @@ class Model extends Manufacturer{
 					}
 					$insert_arr = array(
 						"models_model_id"		=>	$model_id,
-						"registration_no"		=>	mysql_real_escape_string($registration_no),
-						"model_color"			=>	mysql_real_escape_string($_REQUEST['model_color']),
+						"registration_no"		=>	$this->db->get_mysql_real_escape_string($registration_no),
+						"model_color"			=>	$this->db->get_mysql_real_escape_string($_REQUEST['model_color']),
 						"manufacturing_year"	=>	$_REQUEST['manufacturing_year'],
-						"note"					=>	mysql_real_escape_string($_REQUEST['note']),
+						"note"					=>	$this->db->get_mysql_real_escape_string($_REQUEST['note']),
 						"picture1"				=>	$picture1,
 						"picture2"				=>	$picture2,
 						"added_datetime"		=>	date("Y-m-d H:i:s")

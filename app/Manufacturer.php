@@ -4,7 +4,6 @@ class Manufacturer extends Database{
 	function __construct()
 	{		
 		$this->db = new Database();
-		$this->db->connect();
 	}
 	
 	public function dbParam()// to return the db parameter
@@ -40,7 +39,7 @@ class Manufacturer extends Database{
 			}
 		}
 		else
-			$html.='<tr><td>No Results Found</td><td></td></tr>';
+			$html.='<tr><td>No Results Found</td><td></td><td></td></tr>';
 		
 		$html.='</tbody>';
 		$html.='</table>';
@@ -58,7 +57,7 @@ class Manufacturer extends Database{
 			if($this->db->num_rows($result) == 0)
 			{
 				$insert_arr = array(
-					"manufacturer_name" => mysql_real_escape_string($manufacturer_name),
+					"manufacturer_name" => $this->db->get_mysql_real_escape_string($manufacturer_name),
 					"added_datetime" => date("Y-m-d H:i:s")
 				);
 				
